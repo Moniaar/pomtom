@@ -1,10 +1,10 @@
 # Pomtom 
 A minimal pomodoro app that will be your study buddy! :)
 
-
+- Note: This is my final graduation project with ALX_SE program.
 ## Getting Started with a preview of the App:
 
-
+![Device frames](https://github.com/Moniaar/pomtom/assets/139129370/2939f22f-4dea-4bba-a10b-79be0adafa05)
 
 This project is a starting point for a Flutter application.
 
