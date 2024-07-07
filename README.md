@@ -1,8 +1,10 @@
-# myapp
+# Pomtom 
+A minimal pomodoro app that will be your study buddy! :)
 
-A new Flutter project.
 
-## Getting Started
+## Getting Started with a preview of the App:
+
+
 
 This project is a starting point for a Flutter application.
 
