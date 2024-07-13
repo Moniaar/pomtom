@@ -6,7 +6,7 @@ A minimal pomodoro app that will be your study buddy! :)
 
 ![Device frames](https://github.com/Moniaar/pomtom/assets/139129370/2939f22f-4dea-4bba-a10b-79be0adafa05)
 
-This project is a starting point for a Flutter application.
+
 ### Checklist:
 - Make the clock work in sync with the circle layout
 - put a bar on the bottom of the app with 2 icons to navigate with
