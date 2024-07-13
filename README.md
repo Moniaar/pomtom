@@ -15,6 +15,8 @@ A minimal pomodoro app that will be your study buddy! :)
 - Do all this with the light theme as well
 
 
+#### What I learned during the debugging phase:
+- The debug console is your best friend when the app can't build when you run it.
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
