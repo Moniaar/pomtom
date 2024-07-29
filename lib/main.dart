@@ -207,7 +207,7 @@ class _TimerNavigationState extends State<TimerNavigation> {
       focusDuration: _focusDuration,
       breakDuration: _breakDuration,
     ));
-    _children.add(ComingSoonScreen());
+    _children.add(BotScreen());
   }
 
   void onTabTapped(int index) {
