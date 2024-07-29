@@ -11,7 +11,11 @@ A minimal pomodoro app that will be your study buddy! :)
 - Make the clock work in sync with the circle layout✔️
 - Make the user choose cutsom time to foucs with
 - Enhance the timer UI --> Change "foucs timer" to Pomtom with unique font and add some plugins.
-- Make the AI Actually work
+- Make the AI Actually work ✔️
+- Remove the Settings button
+- Enhance the Chatbot UI
+- Move the moon icon from its position
+- Add a welcome page to show up once when the user installs the app, it should be the logo and name of the App
 - Remove the settings thingy from the main app page
 - put a bar on the bottom of the app with 2 icons to navigate with ✔️
 - The Personal tutor assistance on the 2nd page will be free for now, so make it work by any way you like
