@@ -1,7 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:myapp/timer_navigation.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:flutter/services.dart'; // For chat icons
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:intl/intl.dart'; // For date formatting
 
 void main() {
   runApp(MyApp());
@@ -150,7 +156,7 @@ class MainPage extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Color.fromARGB(255, 124, 86, 191),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -169,6 +175,10 @@ class MainPage extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  SettingsScreen() {
+    throw UnimplementedError();
   }
 }
 
@@ -236,7 +246,7 @@ class _TimerNavigationState extends State<TimerNavigation> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.support_agent), // Use a suitable copilot icon
-              label: 'Coming Soon',
+              label: 'Study Buddy',
             ),
           ],
         ),
@@ -458,49 +468,142 @@ class _FocusTimerScreenState extends State<FocusTimerScreen> with SingleTickerPr
   }
 }
 
-class ComingSoonScreen extends StatelessWidget {
+class BotScreen extends StatefulWidget {
+  const BotScreen({super.key});
+
+  @override
+  State<BotScreen> createState() => _BotScreenState();
+}
+
+class _BotScreenState extends State<BotScreen> {
+  final TextEditingController _userMessage = TextEditingController();
+
+  static const apiKey = "AIzaSyCmxiF-wOE4sXN5aY3smg8cZF-UcwnoUh4";
+
+  final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
+
+  final List<Message> _messages = [];
+
+  Future<void> sendMessage() async {
+    final message = _userMessage.text;
+    _userMessage.clear();
+
+    setState(() {
+      _messages
+          .add(Message(isUser: true, message: message, date: DateTime.now()));
+    });
+
+    final content = [Content.text(message)];
+    final response = await model.generateContent(content);
+    setState(() {
+      _messages.add(Message(
+          isUser: false, message: response.text ?? "", date: DateTime.now()));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('AI Tutor'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(10),
-              children: [
-                ChatBubble(
-                  text: "Hello! I'm your AI Personal Assistance. How can I help you today?",
-                  isUser: false,
-                ),
-                // Add more ChatBubble widgets here to simulate conversation
-              ],
+        appBar: AppBar(
+          title: const Text('Bot'),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final message = _messages[index];
+                  return Messages(
+                    isUser: message.isUser,
+                    message: message.message,
+                    date: DateFormat('HH:mm').format(message.date),
+                  );
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Type a message...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 15,
+                    child: TextFormField(
+                      controller: _userMessage,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.deepOrange),
+                            borderRadius: BorderRadius.circular(50)),
+                        label: const Text("Ask Gemini..."),
                       ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    // Implement message sending functionality here
-                  },
-                ),
-              ],
-            ),
+                  const Spacer(),
+                  IconButton(
+                    padding: const EdgeInsets.all(15),
+                    iconSize: 30,
+                    style: ButtonStyle(
+                      backgroundColor:
+                          WidgetStateProperty.all(Colors.deepPurple),
+                      foregroundColor: WidgetStateProperty.all(Colors.white),
+                      shape: WidgetStateProperty.all(
+                        const CircleBorder(),
+                      ),
+                    ),
+                    onPressed: () {
+                      sendMessage();
+                    },
+                    icon: const Icon(Icons.send),
+                  )
+                ],
+              ),
+            )
+          ],
+        ));
+  }
+}
+
+class Messages extends StatelessWidget {
+  final bool isUser;
+  final String message;
+  final String date;
+  const Messages(
+      {super.key,
+      required this.isUser,
+      required this.message,
+      required this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.symmetric(vertical: 15).copyWith(
+        left: isUser ? 100 : 10,
+        right: isUser ? 10 : 100,
+      ),
+      decoration: BoxDecoration(
+        color: isUser ? Colors.deepPurple : Colors.grey.shade200,
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(30),
+          bottomLeft: isUser ? const Radius.circular(30) : Radius.zero,
+          topRight: const Radius.circular(30),
+          bottomRight: isUser ? Radius.zero : const Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            message,
+            style: TextStyle(color: isUser ? Colors.white : Colors.black),
+          ),
+          Text(
+            date,
+            style: TextStyle(color: isUser ? Colors.white : Colors.black),
           ),
         ],
       ),
@@ -508,55 +611,14 @@ class ComingSoonScreen extends StatelessWidget {
   }
 }
 
-class ChatBubble extends StatelessWidget {
-  final String text;
+class Message {
   final bool isUser;
+  final String message;
+  final DateTime date;
 
-  ChatBubble({required this.text, required this.isUser});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        decoration: BoxDecoration(
-          color: isUser ? Colors.deepPurple : Colors.grey[300],
-          borderRadius: isUser
-              ? BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                  bottomLeft: Radius.circular(15),
-                )
-              : BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
-                ),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isUser ? Colors.white : Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-class SettingsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
-      body: Center(
-        child: Text('Settings Screen'),
-      ),
-    );
-  }
+  Message({
+    required this.isUser,
+    required this.message,
+    required this.date,
+  });
 }
