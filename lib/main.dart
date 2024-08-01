@@ -8,10 +8,15 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart'; // For date formatting
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:524108969.
+import 'package:myapp/login.dart';
 
 void main() {
   runApp(MyApp());
 }
+
+bool _isLoggedIn = false;
+String _username = '';
 
 class MyApp extends StatefulWidget {
   @override
@@ -20,10 +25,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool isDarkMode = true;
+  bool _isLoggedIn = false;
+  String _username = '';
 
   void toggleTheme() {
     setState(() {
       isDarkMode = !isDarkMode;
+    });
+  }
+
+  void _handleLogin(String username) {
+    setState(() {
+      _isLoggedIn = true;
+      _username = username;
     });
   }
 
@@ -45,16 +59,20 @@ class _MyAppState extends State<MyApp> {
                   .copyWith(secondary: Colors.deepPurpleAccent)
                   .copyWith(background: Colors.white),
             ),
-      home: MainPage(toggleTheme: toggleTheme, isDarkMode: isDarkMode),
+      home: _isLoggedIn
+          ? MainPage(toggleTheme: toggleTheme, isDarkMode: isDarkMode, username: _username)
+          : LoginPage(onLogin: _handleLogin),
     );
   }
 }
 
+
 class MainPage extends StatelessWidget {
   final Function toggleTheme;
   final bool isDarkMode;
+  final String username;
 
-  MainPage({required this.toggleTheme, required this.isDarkMode});
+  MainPage({required this.toggleTheme, required this.isDarkMode, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +142,7 @@ class MainPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => TimerNavigation(
-                              toggleTheme: toggleTheme, isDarkMode: isDarkMode)),
+                              toggleTheme: toggleTheme, isDarkMode: isDarkMode, username: '$username',)),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -144,236 +162,79 @@ class MainPage extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-              bottom: 20,
-              left: 20,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SettingsScreen()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 124, 86, 191),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                child: Text(
-                  'Settings',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
-  
-  SettingsScreen() {
-    throw UnimplementedError();
-  }
 }
+
 
 class TimerNavigation extends StatefulWidget {
   final Function toggleTheme;
   final bool isDarkMode;
+  final String username;
+  final int focusDuration;
+  final int breakDuration;
 
-  TimerNavigation({required this.toggleTheme, required this.isDarkMode});
+  TimerNavigation({
+    required this.toggleTheme,
+    required this.isDarkMode,
+    required this.username,
+    this.focusDuration = 1500, // Default 25 minutes
+    this.breakDuration = 300,  // Default 5 minutes
+  });
 
   @override
   _TimerNavigationState createState() => _TimerNavigationState();
 }
 
-class _TimerNavigationState extends State<TimerNavigation> {
-  int _currentIndex = 0;
-  int _focusDuration = 600; // default to 10 minutes
-  int _breakDuration = 300; // default to 5 minutes
-
-  final List<Widget> _children = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _children.add(FocusTimerScreen(
-      isDarkMode: widget.isDarkMode,
-      focusDuration: _focusDuration,
-      breakDuration: _breakDuration,
-    ));
-    _children.add(BotScreen());
-  }
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pomodoro Timer'),
-        actions: [
-          IconButton(
-            icon: Icon(
-              widget.isDarkMode ? Icons.nightlight_round : Icons.wb_sunny,
-              color: Colors.purple,
-            ),
-            onPressed: () {
-              widget.toggleTheme();
-            },
-          ),
-        ],
-      ),
-      body: _children[_currentIndex],
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
-        child: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.timer),
-              label: 'Timer',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.support_agent), // Use a suitable copilot icon
-              label: 'Study Buddy',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class FocusTimerScreen extends StatefulWidget {
-  final bool isDarkMode;
-  final int focusDuration;
-  final int breakDuration;
-
-  FocusTimerScreen({
-    required this.isDarkMode,
-    required this.focusDuration,
-    required this.breakDuration,
-  });
-
-  @override
-  _FocusTimerScreenState createState() => _FocusTimerScreenState();
-}
-
-class _FocusTimerScreenState extends State<FocusTimerScreen> with SingleTickerProviderStateMixin {
-  late Timer _timer;
-  late int _focusRemainingTime;
-  late int _breakRemainingTime;
+class _TimerNavigationState extends State<TimerNavigation>
+    with SingleTickerProviderStateMixin {
   bool _isFocusRunning = false;
   bool _isBreakRunning = false;
-
+  late int _focusRemainingTime;
+  late int _breakRemainingTime;
   late AnimationController _glowController;
   late Animation<Color?> _glowAnimation;
 
-  final TextEditingController _focusController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
-
     _focusRemainingTime = widget.focusDuration;
     _breakRemainingTime = widget.breakDuration;
-
     _glowController = AnimationController(
+      duration: const Duration(seconds: 2),
       vsync: this,
-      duration: Duration(seconds: 2),
     )..repeat(reverse: true);
 
     _glowAnimation = ColorTween(
-      begin: Colors.deepPurpleAccent,
-      end: Colors.transparent,
+      begin: Colors.deepPurple.withOpacity(0.5),
+      end: Colors.deepPurple,
     ).animate(_glowController);
+  }
+
+  void _startFocusTimer() {
+    setState(() {
+      _isFocusRunning = true;
+      _isBreakRunning = false;
+      _focusRemainingTime = widget.focusDuration;
+    });
+    // Add your timer logic here
+  }
+
+  void _pauseTimer() {
+    setState(() {
+      _isFocusRunning = false;
+      _isBreakRunning = false;
+    });
+    // Add your pause logic here
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     _glowController.dispose();
     super.dispose();
-  }
-
-  void _startFocusTimer() {
-    if (_isFocusRunning || _isBreakRunning) return;
-
-    setState(() {
-      _isFocusRunning = true;
-    });
-
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_focusRemainingTime > 0) {
-        setState(() {
-          _focusRemainingTime--;
-        });
-      } else {
-        timer.cancel();
-        setState(() {
-          _isFocusRunning = false;
-        });
-        _startBreakTimer();
-      }
-    });
-  }
-
-  void _startBreakTimer() {
-    if (_isBreakRunning) return;
-
-    setState(() {
-      _isBreakRunning = true;
-    });
-
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_breakRemainingTime > 0) {
-        setState(() {
-          _breakRemainingTime--;
-        });
-      } else {
-        timer.cancel();
-        setState(() {
-          _isBreakRunning = false;
-        });
-        _resetTimers();
-      }
-    });
-  }
-
-  void _pauseTimer() {
-    _timer.cancel();
-    setState(() {
-      _isFocusRunning = false;
-      _isBreakRunning = false;
-    });
-  }
-
-  void _resetTimers() {
-    setState(() {
-      _focusRemainingTime = widget.focusDuration;
-      _breakRemainingTime = widget.breakDuration;
-      _isFocusRunning = false;
-      _isBreakRunning = false;
-    });
-  }
-
-  void _updateFocusDuration() {
-    final newFocusDuration = int.tryParse(_focusController.text) ?? widget.focusDuration ~/ 60;
-    setState(() {
-      _focusRemainingTime = newFocusDuration * 60;
-      _focusController.clear();
-    });
   }
 
   @override
@@ -385,7 +246,7 @@ class _FocusTimerScreenState extends State<FocusTimerScreen> with SingleTickerPr
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Focus Timer',
+              'Focus Timer - Hello, ${widget.username}',
               style: TextStyle(
                 color: widget.isDarkMode ? Colors.white : Colors.black,
                 fontSize: 24,
