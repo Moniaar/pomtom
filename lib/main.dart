@@ -8,7 +8,6 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart'; // For date formatting
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:524108969.
 import 'package:myapp/login.dart';
 
 void main() {
