@@ -8,6 +8,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart'; // For date formatting
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:524108969.
 import 'package:myapp/login.dart';
 
 void main() {
@@ -168,7 +169,6 @@ class MainPage extends StatelessWidget {
   }
 }
 
-
 class TimerNavigation extends StatefulWidget {
   final Function toggleTheme;
   final bool isDarkMode;
@@ -192,16 +192,23 @@ class _TimerNavigationState extends State<TimerNavigation>
     with SingleTickerProviderStateMixin {
   bool _isFocusRunning = false;
   bool _isBreakRunning = false;
+  bool _isPaused = false;
   late int _focusRemainingTime;
   late int _breakRemainingTime;
+  late int _customFocusTime;
+  late int _customBreakTime;
   late AnimationController _glowController;
   late Animation<Color?> _glowAnimation;
+  Timer? _timer;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _focusRemainingTime = widget.focusDuration;
     _breakRemainingTime = widget.breakDuration;
+    _customFocusTime = widget.focusDuration;
+    _customBreakTime = widget.breakDuration;
     _glowController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -217,50 +224,125 @@ class _TimerNavigationState extends State<TimerNavigation>
     setState(() {
       _isFocusRunning = true;
       _isBreakRunning = false;
-      _focusRemainingTime = widget.focusDuration;
+      _isPaused = false;
+      _focusRemainingTime = _customFocusTime;
     });
-    // Add your timer logic here
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_isFocusRunning && !_isPaused) {
+          if (_focusRemainingTime > 0) {
+            _focusRemainingTime--;
+          } else {
+            _isFocusRunning = false;
+            _isBreakRunning = true;
+            _focusRemainingTime = _customFocusTime;
+          }
+        } else if (_isBreakRunning && !_isPaused) {
+          if (_breakRemainingTime > 0) {
+            _breakRemainingTime--;
+          } else {
+            _isBreakRunning = false;
+            _breakRemainingTime = _customBreakTime;
+          }
+        }
+      });
+    });
   }
 
   void _pauseTimer() {
     setState(() {
-      _isFocusRunning = false;
-      _isBreakRunning = false;
+      _isPaused = !_isPaused;
     });
-    // Add your pause logic here
   }
 
-  @override
-  void dispose() {
-    _glowController.dispose();
-    super.dispose();
-  }
+  void _showCustomTimeDialog() {
+    int? focusTime;
+    int? breakTime;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: widget.isDarkMode ? Color(0xFF1E1E1E) : Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Set Custom Time'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Focus Timer - Hello, ${widget.username}',
-              style: TextStyle(
-                color: widget.isDarkMode ? Colors.white : Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Focus Time (minutes)',
               ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                focusTime = int.tryParse(value);
+              },
             ),
-            SizedBox(height: 20),
-            CircularPercentIndicator(
-              radius: 125.0,
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Break Time (minutes)',
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                breakTime = int.tryParse(value);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {
+                if (focusTime != null) {
+                  _customFocusTime = focusTime! * 60;
+                  _focusRemainingTime = _customFocusTime;
+                }
+                if (breakTime != null) {
+                  _customBreakTime = breakTime! * 60;
+                  _breakRemainingTime = _customBreakTime;
+                }
+              });
+            },
+            child: Text('Set'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _buildTimerScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Focus Timer - Hello, ${widget.username}',
+            style: TextStyle(
+              color: widget.isDarkMode ? Colors.white : Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20),
+          GestureDetector(
+            onTap: _showCustomTimeDialog,
+            child: CircularPercentIndicator(
+              radius: 80.0,
               lineWidth: 12.0,
-              animation: false,
+              animation: false, // Disable the animation for a smoother transition
               percent: _isFocusRunning
-                  ? _focusRemainingTime / widget.focusDuration
+                  ? _focusRemainingTime / _customFocusTime
                   : _isBreakRunning
-                      ? _breakRemainingTime / widget.breakDuration
+                      ? _breakRemainingTime / _customBreakTime
                       : 1.0,
               center: Text(
                 _isFocusRunning
@@ -279,55 +361,82 @@ class _TimerNavigationState extends State<TimerNavigation>
                   ? Colors.deepPurpleAccent
                   : Colors.deepPurple,
             ),
-            SizedBox(height: 30),
-            GestureDetector(
-              onTap: _isFocusRunning || _isBreakRunning
-                  ? _pauseTimer
-                  : _startFocusTimer,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [Colors.deepPurple, Colors.deepPurple.withOpacity(0)],
-                    stops: [0.5, 2.0],
-                    center: Alignment.center,
-                    radius: 0.5,
+          ),
+          SizedBox(height: 30),
+          GestureDetector(
+            onTap: _isFocusRunning || _isBreakRunning
+                ? _pauseTimer
+                : _startFocusTimer,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [Colors.deepPurple, Colors.deepPurple.withOpacity(0)],
+                  stops: [0.5, 2.0],
+                  center: Alignment.center,
+                  radius: 0.5,
+                ),
+              ),
+              child: ScaleTransition(
+                scale: Tween(begin: 0.9, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: _glowController,
+                    curve: Curves.easeInOut,
                   ),
                 ),
-                child: ScaleTransition(
-                  scale: Tween(begin: 0.9, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: _glowController,
-                      curve: Curves.easeInOut,
+                child: AnimatedBuilder(
+                  animation: _glowController,
+                  builder: (context, child) => Container(
+                    padding: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _glowAnimation.value,
                     ),
-                  ),
-                  child: AnimatedBuilder(
-                    animation: _glowController,
-                    builder: (context, child) => Container(
-                      padding: EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _glowAnimation.value,
-                      ),
-                      child: Icon(
-                        _isFocusRunning || _isBreakRunning
-                            ? Icons.pause
-                            : Icons.play_arrow,
-                        size: 50.0,
-                        color: Colors.white,
-                      ),
+                    child: Icon(
+                      _isFocusRunning || _isBreakRunning
+                          ? _isPaused ? Icons.play_arrow : Icons.pause
+                          : Icons.play_arrow,
+                      size: 50.0,
+                      color: Colors.white,
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatBotScreen() {
+    return const BotScreen();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: widget.isDarkMode ? Color(0xFF1E1E1E) : Colors.white,
+      body: _selectedIndex == 0 ? _buildTimerScreen() : _buildChatBotScreen(),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.timer),
+            label: 'Timer',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chatbot',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.deepPurple,
+        onTap: _onItemTapped,
       ),
     );
   }
 }
-
+  
 class BotScreen extends StatefulWidget {
   const BotScreen({super.key});
 
