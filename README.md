@@ -13,6 +13,7 @@ A minimal pomodoro app that will be your study buddy! :)
 - Enhance the timer UI --> Change "foucs timer" to Pomtom with unique font and add some plugins.
 - Make the AI Actually work ✔️
 - Remove the Settings button
+- Add gradiant to the balls on main welcome page
 - Enhance the Chatbot UI
 - Move the moon icon from its position
 - Add a welcome page to show up once when the user installs the app, it should be the logo and name of the App
