@@ -1,4 +1,4 @@
-# Pomtom 
+U# Pomtom 
 A minimal pomodoro app that will be your study buddy! :)
 
 - Note: This is my final graduation project with ALX_SE program.
@@ -27,6 +27,8 @@ A minimal pomodoro app that will be your study buddy! :)
 ## Premium features functions:
 1. Study tracker
 2. Full access to AI (For now it's free all time) 
+3. Payment methods
+4. Multiple widgets for each section above
 
 
 #### What I learned during the debugging phase:
