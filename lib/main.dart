@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:myapp/timer_navigation.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -8,7 +7,6 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart'; // For date formatting
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:524108969.
 import 'package:myapp/login.dart';
 
 void main() {
@@ -99,7 +97,7 @@ class MainPage extends StatelessWidget {
               child: Text(
                 "Let's focus for a\nbit and reward\nourselves later!",
                 style: TextStyle(
-                  color: isDarkMode ? Colors.white : Colors.black54,
+                  color: isDarkMode ? Colors.white : Color.fromARGB(201, 0, 0, 0),
                   fontSize: 18,
                   fontFamily: 'DancingScript',
                 ),
@@ -123,11 +121,11 @@ class MainPage extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: 80,
-              left: 130,
+              bottom: 50,
+              left: 110,
               child: CircleAvatar(
                 radius: 50,
-                backgroundColor: Colors.deepOrangeAccent,
+                backgroundColor: Color.fromARGB(204, 255, 109, 64),
               ),
             ),
             Positioned(
