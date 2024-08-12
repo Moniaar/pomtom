@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
   bool _passwordVisible = false;
 
+// positioning elements in the main box
   @override
   Widget build(BuildContext context) {
     return Scaffold(
