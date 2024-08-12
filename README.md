@@ -48,7 +48,7 @@ Before you begin, ensure you have met the following requirements:
 1. **Clone the Repository**:
    
    ```
-   git clone https://github.com/yourusername/flutter_timer_app.git
+   git clone https://git@github.com:Moniaar/pomtom.git
    cd flutter_timer_app
    ```
 2. **Install Dependencies**:
