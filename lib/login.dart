@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// login widget 
 class LoginPage extends StatefulWidget {
   final Function(String) onLogin;
 
