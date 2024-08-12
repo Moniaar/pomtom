@@ -1,15 +1,12 @@
 # Pomtom 
+![Flutter Timer Logo](https://github.com/user-attachments/assets/ea4f1504-5753-4584-95c2-79b3c0220c34)
+
 A minimal pomodoro app that will be your study buddy! :)
-![Flutter Timer Logo](assets/logo.png)
 
 - Note: This is my final graduation project with ALX_SE program.
-## Getting Started with a preview of the App:
-
-![Device frames](https://github.com/Moniaar/pomtom/assets/139129370/2939f22f-4dea-4bba-a10b-79be0adafa05)
 
 ## Table of Contents
 
-- [Introduction](#introduction)
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -67,6 +64,8 @@ Before you begin, ensure you have met the following requirements:
 Once the app is running, you can start by setting a timer using the intuitive UI. Choose your desired duration and mode (countdown, stopwatch, etc.), and hit the start button. You can pause, resume, or reset the timer as needed. If enabled, notifications will alert you when the timer reaches zero.
 
 ### Screenshots
+
+![Device frames](https://github.com/Moniaar/pomtom/assets/139129370/2939f22f-4dea-4bba-a10b-79be0adafa05)
 
 ### Architecture
 This Flutter Timer App follows a clean architecture pattern, separating concerns into different layers:
