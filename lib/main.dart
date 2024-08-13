@@ -13,6 +13,7 @@ void main() {
   runApp(MyApp());
 }
 
+// Assuming that the user isn't signed in initially
 bool _isLoggedIn = false;
 String _username = '';
 
@@ -21,17 +22,20 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+// Making the main login page dark theme
 class _MyAppState extends State<MyApp> {
   bool isDarkMode = true;
   bool _isLoggedIn = false;
   String _username = '';
 
+// To make the toggle switch themes when the user clicks
   void toggleTheme() {
     setState(() {
       isDarkMode = !isDarkMode;
     });
   }
 
+// Take the username and set it to _username
   void _handleLogin(String username) {
     setState(() {
       _isLoggedIn = true;
@@ -72,6 +76,7 @@ class MainPage extends StatelessWidget {
 
   MainPage({required this.toggleTheme, required this.isDarkMode, required this.username});
 
+// App welcome page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +152,7 @@ class MainPage extends StatelessWidget {
                     backgroundColor: Color.fromRGBO(103, 58, 183, 1),
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(7.0),
                     ),
                   ),
                   child: Text(
@@ -167,6 +172,7 @@ class MainPage extends StatelessWidget {
   }
 }
 
+// Timer window navigation
 class TimerNavigation extends StatefulWidget {
   final Function toggleTheme;
   final bool isDarkMode;
@@ -186,6 +192,7 @@ class TimerNavigation extends StatefulWidget {
   _TimerNavigationState createState() => _TimerNavigationState();
 }
 
+// Creating the class for the timer and initalizing the variables
 class _TimerNavigationState extends State<TimerNavigation>
     with SingleTickerProviderStateMixin {
   bool _isFocusRunning = false;
@@ -200,6 +207,7 @@ class _TimerNavigationState extends State<TimerNavigation>
   Timer? _timer;
   int _selectedIndex = 0;
 
+// the init state for all variables
   @override
   void initState() {
     super.initState();
@@ -212,6 +220,7 @@ class _TimerNavigationState extends State<TimerNavigation>
       vsync: this,
     )..repeat(reverse: true);
 
+// Indicating that the color of the glow should change
     _glowAnimation = ColorTween(
       begin: Colors.deepPurple.withOpacity(0.5),
       end: Colors.deepPurple,
@@ -228,6 +237,8 @@ class _TimerNavigationState extends State<TimerNavigation>
     _startTimer();
   }
 
+// function to start the timer and pause when the user clicks the pause button below
+// without switching to the break or starting from the beginning
   void _startTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -258,6 +269,7 @@ class _TimerNavigationState extends State<TimerNavigation>
     });
   }
 
+// When the user clicks in the clock a window should appear to ask him to enter cutom time
   void _showCustomTimeDialog() {
     int? focusTime;
     int? breakTime;
@@ -294,6 +306,7 @@ class _TimerNavigationState extends State<TimerNavigation>
             onPressed: () {
               Navigator.of(context).pop();
               setState(() {
+                // Making sure it's all in minutes
                 if (focusTime != null) {
                   _customFocusTime = focusTime! * 60;
                   _focusRemainingTime = _customFocusTime;
@@ -323,7 +336,7 @@ class _TimerNavigationState extends State<TimerNavigation>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Focus Timer - Hello, ${widget.username}',
+            'Focus Timer \nHello, ${widget.username}',
             style: TextStyle(
               color: widget.isDarkMode ? Colors.white : Colors.black,
               fontSize: 24,
@@ -411,6 +424,7 @@ class _TimerNavigationState extends State<TimerNavigation>
     return const BotScreen();
   }
 
+// Navigation bar for the timer and the study buddy
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -424,7 +438,7 @@ class _TimerNavigationState extends State<TimerNavigation>
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Chatbot',
+            label: 'Study Buddy',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -434,7 +448,8 @@ class _TimerNavigationState extends State<TimerNavigation>
     );
   }
 }
-  
+
+// Bot screen for the study buddy
 class BotScreen extends StatefulWidget {
   const BotScreen({super.key});
 
@@ -454,6 +469,7 @@ class _BotScreenState extends State<BotScreen> {
   Future<void> sendMessage() async {
     final message = _userMessage.text;
     _userMessage.clear();
+// setting the format of the messages
 
     setState(() {
       _messages
@@ -472,7 +488,7 @@ class _BotScreenState extends State<BotScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Bot'),
+          title: const Text('Study buddy'),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -490,6 +506,7 @@ class _BotScreenState extends State<BotScreen> {
                 },
               ),
             ),
+            // messages Ui
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
@@ -504,7 +521,7 @@ class _BotScreenState extends State<BotScreen> {
                             borderSide:
                                 const BorderSide(color: Colors.deepOrange),
                             borderRadius: BorderRadius.circular(50)),
-                        label: const Text("Ask Gemini..."),
+                        label: const Text("Ask me someting..."),
                       ),
                     ),
                   ),
@@ -543,6 +560,7 @@ class Messages extends StatelessWidget {
       required this.message,
       required this.date});
 
+// More on messages UI below handling both light/dark theme
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -578,6 +596,7 @@ class Messages extends StatelessWidget {
   }
 }
 
+// Define the message class
 class Message {
   final bool isUser;
   final String message;
