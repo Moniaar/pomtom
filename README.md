@@ -130,6 +130,10 @@ Contributions are welcome! If you’d like to contribute, please fork the reposi
 - The debug console is your best friend when the app can't build when you run it.
 A few resources to get you started if this is your first Flutter project:
 
+**for fonts**:
+- [Flutter fonts](https://docs.flutter.dev/cookbook/design/fonts#from-packages)
+- [Google fonts](https://fonts.google.com)
+
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
