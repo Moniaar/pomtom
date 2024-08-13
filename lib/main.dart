@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+// The module responsiable for animation decreasing
 import 'package:percent_indicator/percent_indicator.dart';
+// To make the API From Gemini work
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+// Google generative AI 
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart'; // For date formatting
+// Importing the login page
 import 'package:myapp/login.dart';
 
 void main() {
