@@ -127,8 +127,18 @@ Contributions are welcome! If you’d like to contribute, please fork the reposi
 4. Multiple widgets for each section above
 
 
+
 #### What I learned during the debugging phase:
 - The debug console is your best friend when the app can't build when you run it.
+- flutter pub get whenever you add an assest or a new dependcay or a plugin.
+- Pubspec.yaml is very sensitive for identaion, you have to use your space not tab because it doesn't support it.
+- Building wouldn't work without you fixing the pubspec.
+- It's okay to add assets outside an assest folder (inside myapp folder which is the main one) if you have 2 or less. But once your assets are a lot, you will have to make a seprate folder for that.
+  
+  The following is the tree structure of any basic flutter app:
+ ![img](https://github.com/user-attachments/assets/d712619c-32b0-49d4-9012-2955ae143bd9)
+
+  
 A few resources to get you started if this is your first Flutter project:
 
 **for fonts**:
