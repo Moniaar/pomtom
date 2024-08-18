@@ -1,6 +1,6 @@
 # Pomtom 
-![Flutter Timer Logo](https://github.com/user-attachments/assets/ea4f1504-5753-4584-95c2-79b3c0220c34)
-![Rectangle](https://github.com/user-attachments/assets/9592c54b-e802-4ce9-a7d9-d6c3a2c9b610)
+![356931461-ea4f1504-5753-4584-95c2-79b3c0220c34 1](https://github.com/user-attachments/assets/ccc7231a-aed9-49df-8de9-d7b190573dda)
+
 
 A minimal pomodoro app that will be your study buddy! :)
 
