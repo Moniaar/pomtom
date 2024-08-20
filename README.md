@@ -1,6 +1,6 @@
 # Pomtom 
-![356931461-ea4f1504-5753-4584-95c2-79b3c0220c34 1](https://github.com/user-attachments/assets/ccc7231a-aed9-49df-8de9-d7b190573dda)
 
+![App-logo](https://github.com/user-attachments/assets/ec202edf-67a9-4f32-9e48-cbd0243891e1)
 
 A minimal pomodoro app that will be your study buddy! :)
 
