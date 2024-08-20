@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 10),
               // Add the image here
               Image.asset(
-                'Rectangle.png',
+                'App-logo.png',
                 height: 50, // Adjust the height as needed
               ),
               const SizedBox(height: 10),
