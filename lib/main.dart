@@ -340,7 +340,7 @@ class _TimerNavigationState extends State<TimerNavigation>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Focus Timer \nHello, ${widget.username}',
+           'Hello, ${widget.username}',
             style: TextStyle(
               color: widget.isDarkMode ? Colors.white : Colors.black,
               fontSize: 24,
