@@ -62,7 +62,7 @@ Before you begin, ensure you have met the following requirements:
    ```
 
 ### Usage
-Once the app is running, you can start by setting a timer using the intuitive UI. Choose your desired duration and mode (countdown, stopwatch, etc.), and hit the start button. You can pause, resume, or reset the timer as needed. If enabled, notifications will alert you when the timer reaches zero.
+Once the app is running, you can start by setting a timer using the intuitive UI. Choose your desired duration and mode (countdown, stopwatch, etc.), and hit the start button. You can pause, resume, or reset the timer as needed. If enabled, the purple side will fill up again and alert you when the timer reaches zero.
 
 ### Screenshots
 
