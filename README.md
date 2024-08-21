@@ -110,9 +110,8 @@ Contributions are welcome! If you’d like to contribute, please fork the reposi
 - Make the AI Actually work ✔️
 - Remove the Settings button ✔️
 - Add gradiant to the balls on main welcome page
-- Enhance the Chatbot UI
-- Move the moon icon from its position
-- Add a welcome page to show up once when the user installs the app, it should be the logo and name of the App
+- Enhance the Chatbot UI ✔️
+- Add a welcome page to show up once when the user installs the app, it should be the logo and name of the App ✔️
 - put a bar on the bottom of the app with 2 icons to navigate with ✔️
 - The study buddy assistance on the 2nd page will be free for now, so make it work by any way you like 
 - A window that will ask you if you want to join the AI premium feature at first or not, once answered yes it won't appear again 🔜
