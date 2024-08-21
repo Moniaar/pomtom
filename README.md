@@ -50,7 +50,7 @@ Before you begin, ensure you have met the following requirements:
    
    ```
    git clone https://git@github.com:Moniaar/pomtom.git
-   cd flutter_timer_app
+   cd pomtom
    ```
 2. **Install Dependencies**:
    ```
