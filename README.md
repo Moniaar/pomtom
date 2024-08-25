@@ -65,6 +65,23 @@ Before you begin, ensure you have met the following requirements:
 Once the app is running, you can start by setting a timer using the intuitive UI. Choose your desired duration and mode (countdown, stopwatch, etc.), and hit the start button. You can pause, resume, or reset the timer as needed. If enabled, the purple side will fill up again and alert you when the timer reaches zero.
 
 ### Screenshots
+Current app state:
+Light-theme:
+
+![image](https://github.com/user-attachments/assets/7d7bc783-880a-4a89-b47c-53a2b50dcb63)
+![image](https://github.com/user-attachments/assets/9da7e4af-7fd1-4e5c-b268-72e6209dfd67)
+![image](https://github.com/user-attachments/assets/66999b41-ed34-46fa-85b2-9877bfb0bba4)
+![image](https://github.com/user-attachments/assets/5491b4d1-91cc-4ccd-a2f3-ba32fb778fd8)
+
+
+Dark-theme:
+
+![image](https://github.com/user-attachments/assets/e6c26703-9d60-41ec-ac48-dba86c80a816)
+![image](https://github.com/user-attachments/assets/0204f4c1-e6aa-4ea5-8bd7-036d2326ba09)
+![image](https://github.com/user-attachments/assets/f14023b2-8233-4d89-a50c-ad813e51067d)
+![image](https://github.com/user-attachments/assets/3d848279-a260-42a6-b646-277cdf2d6e81)
+
+Initial goal (Final look for last version):
 
 ![Device frames](https://github.com/Moniaar/pomtom/assets/139129370/2939f22f-4dea-4bba-a10b-79be0adafa05)
 
